@@ -53,29 +53,29 @@ export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || '0x0
 export function useShadowSatsContract() {
   const { provider } = useWallet();
 
-  const getContract = () => {
+  const getContract = async () => {
     if (!provider) {
       throw new Error('Provider not available');
     }
 
-    const signer = provider.getSigner();
+    const signer = await provider.getSigner();
     return new ethers.Contract(CONTRACT_ADDRESS, SHADOWSATS_ABI, signer);
   };
 
   const submitOrder = async (commitment: string, proof: string, publicInputs: string[]) => {
-    const contract = getContract();
+    const contract = await getContract();
     const tx = await contract.submitOrder(commitment, proof, publicInputs);
     return tx.wait();
   };
 
   const executeBatch = async (batchId: number, proof: string, data: string) => {
-    const contract = getContract();
+    const contract = await getContract();
     const tx = await contract.executeBatch(batchId, proof, data);
     return tx.wait();
   };
 
   const deposit = async (amount: string) => {
-    const contract = getContract();
+    const contract = await getContract();
     const tx = await contract.deposit(ethers.parseEther(amount), {
       value: ethers.parseEther(amount)
     });
@@ -83,13 +83,13 @@ export function useShadowSatsContract() {
   };
 
   const withdraw = async (amount: string) => {
-    const contract = getContract();
+    const contract = await getContract();
     const tx = await contract.withdraw(ethers.parseEther(amount));
     return tx.wait();
   };
 
   const getBalance = async (address: string) => {
-    const contract = getContract();
+    const contract = await getContract();
     const balance = await contract.getBalance(address);
     return ethers.formatEther(balance);
   };
