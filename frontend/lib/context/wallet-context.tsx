@@ -4,6 +4,13 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { ethers } from 'ethers';
 import { toast } from 'sonner';
 
+// Extend the Window interface to include ethereum
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 interface WalletContextType {
   isConnected: boolean;
   address: string | null;
