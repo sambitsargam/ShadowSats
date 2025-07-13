@@ -1,19 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useAccount } from 'wagmi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowDownToLine, ArrowUpFromLine, Loader2 } from 'lucide-react';
-import { useWallet } from '@/lib/hooks/use-wallet';
 import { toast } from 'sonner';
 
 export function DepositWithdrawWidget() {
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { isConnected } = useWallet();
+  const { isConnected } = useAccount();
 
   const handleDeposit = async () => {
     if (!isConnected) {

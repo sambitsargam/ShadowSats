@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { OrderForm } from '@/components/trade/order-form';
-import { useWallet } from '@/lib/hooks/use-wallet';
+import { useAccount } from 'wagmi'
 import { useZkProof } from '@/lib/hooks/use-zk-proof';
 
 // Mock the hooks
-jest.mock('@/lib/hooks/use-wallet');
+jest.mock('wagmi');
 jest.mock('@/lib/hooks/use-zk-proof');
 jest.mock('sonner', () => ({
   toast: {
@@ -17,19 +17,15 @@ jest.mock('sonner', () => ({
   },
 }));
 
-const mockUseWallet = useWallet as jest.MockedFunction<typeof useWallet>;
+const mockUseAccount = useAccount as jest.MockedFunction<typeof useAccount>;
 const mockUseZkProof = useZkProof as jest.MockedFunction<typeof useZkProof>;
 
 describe('OrderForm', () => {
   beforeEach(() => {
-    mockUseWallet.mockReturnValue({
+    mockUseAccount.mockReturnValue({
       isConnected: true,
       address: '0x123',
-      network: 'Citrea Testnet',
-      connect: jest.fn(),
-      disconnect: jest.fn(),
-      provider: {} as any,
-    });
+    } as any);
 
     mockUseZkProof.mockReturnValue({
       generateProof: jest.fn(() => Promise.resolve({

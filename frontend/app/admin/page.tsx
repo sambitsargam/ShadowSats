@@ -1,13 +1,13 @@
 'use client';
 
+import { useAccount } from 'wagmi'
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { BatchExecutor } from '@/components/admin/batch-executor';
-import { useWallet } from '@/lib/hooks/use-wallet';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ShieldAlert } from 'lucide-react';
 
 export default function Admin() {
-  const { address } = useWallet();
+  const { address } = useAccount();
   const isAdmin = address?.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ADDRESS?.toLowerCase();
 
   if (!isAdmin) {

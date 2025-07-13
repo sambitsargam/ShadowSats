@@ -1,12 +1,19 @@
 'use client';
 
-import { useContext } from 'react';
-import { WalletContext } from '@/lib/context/wallet-context';
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 
 export function useWallet() {
-  const context = useContext(WalletContext);
-  if (!context) {
-    throw new Error('useWallet must be used within a WalletProvider');
+  const { address, isConnected, chain } = useAccount()
+  const { disconnect } = useDisconnect()
+  const { openConnectModal } = useConnectModal()
+
+  return {
+    address,
+    isConnected,
+    network: chain?.name || null,
+    connect: openConnectModal || (() => {}),
+    disconnect,
+    provider: null, // Will be handled by wagmi hooks where needed
   }
-  return context;
 }

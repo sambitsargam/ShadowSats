@@ -1,14 +1,18 @@
 'use client';
 
+import { useAccount, useChainId, useSwitchChain } from 'wagmi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Wallet, Copy, Network, CheckCircle } from 'lucide-react';
-import { useWallet } from '@/lib/hooks/use-wallet';
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { toast } from 'sonner';
+import { citreaTestnet } from '@/lib/chains'
 
 export function WalletStatusCard() {
-  const { isConnected, address, network, connect } = useWallet();
+  const { address, isConnected } = useAccount()
+  const chainId = useChainId()
+  const { switchChain } = useSwitchChain()
 
   const copyAddress = async () => {
     if (address) {
@@ -17,13 +21,22 @@ export function WalletStatusCard() {
     }
   };
 
-  const switchNetwork = async () => {
-    try {
-      // Simulate network switch
-      toast.success('Switched to Citrea Testnet');
-    } catch (error) {
-      toast.error('Failed to switch network');
+  const switchToCitrea = async () => {
+    if (switchChain) {
+      try {
+        switchChain({ chainId: citreaTestnet.id })
+        toast.success('Switched to Citrea Testnet');
+      } catch (error) {
+        toast.error('Failed to switch network');
+      }
     }
+  };
+
+  const getChainName = (chainId: number) => {
+    if (chainId === citreaTestnet.id) {
+      return 'Citrea Testnet';
+    }
+    return `Chain ${chainId}`;
   };
 
   if (!isConnected) {
@@ -46,9 +59,7 @@ export function WalletStatusCard() {
                 Connect your wallet to start trading
               </p>
             </div>
-            <Button onClick={connect} className="btn-primary">
-              Connect Wallet
-            </Button>
+            <ConnectButton />
           </div>
         </CardContent>
       </Card>
@@ -89,9 +100,14 @@ export function WalletStatusCard() {
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline" className="border-primary/50 text-primary">
                 <Network className="w-3 h-3 mr-1" />
-                {network || 'Citrea Testnet'}
+                {getChainName(chainId)}
               </Badge>
-              <Button variant="ghost" size="sm" onClick={switchNetwork}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={switchToCitrea}
+                disabled={!switchChain}
+              >
                 Switch
               </Button>
             </div>

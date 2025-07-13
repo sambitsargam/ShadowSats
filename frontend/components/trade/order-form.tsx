@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAccount } from 'wagmi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Loader2, Zap } from 'lucide-react';
-import { useWallet } from '@/lib/hooks/use-wallet';
 import { useZkProof } from '@/lib/hooks/use-zk-proof';
 import { toast } from 'sonner';
 
@@ -16,7 +16,7 @@ export function OrderForm() {
   const [price, setPrice] = useState('');
   const [size, setSize] = useState('');
   const [side, setSide] = useState<'buy' | 'sell'>('buy');
-  const { isConnected } = useWallet();
+  const { isConnected } = useAccount();
   const { generateProof, isGenerating } = useZkProof();
 
   const handleSubmitOrder = async () => {

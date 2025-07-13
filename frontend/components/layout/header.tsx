@@ -1,16 +1,11 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useWallet } from '@/lib/hooks/use-wallet';
 import { Zap } from 'lucide-react';
 import Link from 'next/link';
 
 export function Header() {
-  const { isConnected, address, connect, disconnect } = useWallet();
-
-  const formatAddress = (addr: string) => {
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
 
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm">
@@ -36,20 +31,7 @@ export function Header() {
           </nav>
           
           <div className="flex items-center gap-4">
-            {isConnected ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">
-                  {formatAddress(address!)}
-                </span>
-                <Button variant="outline" onClick={disconnect} size="sm">
-                  Disconnect
-                </Button>
-              </div>
-            ) : (
-              <Button onClick={connect} className="btn-primary">
-                Connect Wallet
-              </Button>
-            )}
+            <ConnectButton />
           </div>
         </div>
       </div>
